@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Cebu Restaurants</title>
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+        width: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+      #description {
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+      }
+
+      #infowindow-content .title {
+        font-weight: bold;
+      }
+
+      #infowindow-content {
+        display: none;
+      }
+
+      #map #infowindow-content {
+        display: inline;
+      }
+
+      .pac-card {
+        margin: 10px 10px 0 0;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        background-color: #fff;
+        font-family: Roboto;
+      }
+
+      #pac-container {
+        padding-bottom: 12px;
+        margin-right: 12px;
+      }
+
+      .pac-controls {
+        display: inline-block;
+        padding: 5px 11px;
+      }
+
+      .pac-controls label {
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 300;
+      }
+
+      #pac-input {
+        z-index: 1;
+        position: absolute;
+        left: 500px;
+        width: 550px;
+        top: 42px;
+        margin-top: 10px;
+      }
+
+/*       #pac-input .controls{
+  z-index: 0;
+  position: absolute;
+  left: 116px;
+  top: 10px;
+  padding: 6px;
+  width: 400px;
+} */
+
+      #pac-input:focus {
+        border-color: #4d90fe;
+      }
+
+      #title {
+        color: #fff;
+        background-color: #4d90fe;
+        font-size: 25px;
+        font-weight: 500;
+        padding: 6px 12px;
+      }
+      #target {
+        width: 345px;
+      }
+    </style>
+        <style>
+
+      #floatingRectangle {
+        z-index: 1;
+        position: absolute;
+        left: 680px;
+        right: 0;
+        top: 10px;
+        border: 2px solid #fff;
+        box-shadow: 0 2px 6px rgba(0,0,0,.3);
+        width: 650px;
+        
+        background-color: #fff;
+
+        padding: 0;
+      }
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      input[type=text] {
+          width: 130px;
+          -webkit-transition: width 0.4s ease-in-out;
+          transition: width 0.4s ease-in-out;
+      }
+
+      /* When the input field gets focus, change its width to 100% */
+      input[type=text]:focus {
+          width: 350px;
+      }
+
+      input[type=text] {
+          width: 130px;
+          box-sizing: border-box;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          font-size: 16px;
+          background-color: white;
+          background-image: url(https://www.w3schools.com/howto/searchicon.png);
+          background-position: 10px 12px;
+          background-repeat: no-repeat;
+          padding: 12px 20px 12px 40px;
+          -webkit-transition: width .4s ease-in-out;
+          transition: width .4s ease-in-out;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="floatingSeach">
+      <input id="pac-input" class="controls" type="text" name="search" placeholder="Search.." style="left: 500px !important;">
+    </div>
+    <div id="floatingRectangle">
+      <div class="" style="padding:10px">
+        <div id="msg"></div> 
+        <img style="float:left;margin-right:10px" src="https://www.shareicon.net/data/128x128/2017/02/07/878508_fork_512x512.png">
+        <h1 style="font-size:20px;padding:0;margin:0;text-transform:uppercase">Cebu's Restaurants</h1>
+        <hr style="padding:0;margin:0">
+        <br>
+        <div style="float: left;">
+          Types
+          <div class="checkbox">
+          <label><input type="checkbox" id="restaurant_type" value="fastFood">Fast Food</label>
+          <label><input type="checkbox" id="restaurant_type" value="ethnic">Ethnic</label>
+          <label><input type="checkbox" id="restaurant_type" value="casualDining">Casual Dining</label>
+          </div>
+          <button class="btn btn-warning" id="getDirection" style="margin-top:5px">Get Direction</button><br><br>
+        </div>
+
+        <!--<select class="form-control" id="select_from">
+          <option value=""></option>
+          <option value="Danao City, Cebu">Danao City, Cebu</option>
+          <option value="SM Sea Side, Cebu">SM Sea Side, Cebu</option>
+          <option value="Argao, Cebu">Argao, Cebu</option>
+        </select>-->
+        <div style="float: right; margin-right: 10px; margin-top: 25px;">
+        <input class="form-control" id="radius" placeholder="Range Kilometers" style="width: 200px;">
+        <button class="btn btn-danger" id="getRadius" style="margin-top:5px">Draw Circle</button>
+        </div>
+        <div id="chart_div">
+
+        </div>
+      </div>  
+    </div>
+    <div class="container" style="display:none">
+      <h1>Cebu's Best Restaurants</h1>
+      <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Types<span class="caret"></span></button>
+        <ul class="dropdown-menu" id="res_type">
+          <li><a href="#" params="all">All</a></li>
+          <li><a href="#" params="fastFood">Fast food</a></li>
+          <li><a href="#" params="ethnic">Ethnic</a></li>
+          <li><a href="#" params="casualDining">Casual Dining</a></li>
+        </ul>
+        
+      </div>
+      <br>
+      
+    </div>
+    <div id="map"></div>
+    <script src="gviz-api.js"></script>
+    <script src="jsapi.js"></script>
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="Chart.bundle.js"></script>
+    <script src="my_script.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBh9lM9y912MHu3QNbnfs4yIemzqwZbVYw&libraries=places&callback=mapScript.initMap"
+         async defer></script>
+  </body>
+</html>
