@@ -67,7 +67,7 @@ var mapScript = {
                         type_checked.splice(index, 1);
                     }
                 }
-            
+
             //var typeFilter = $(this).attr("params");
             thisLib.filterMarkers(type_checked);
         });
@@ -215,7 +215,7 @@ var mapScript = {
         infowindow = new google.maps.InfoWindow();
         var service = new google.maps.places.PlacesService(map);
         service.nearbySearch({
-          location: pyrmont,
+          location: mapCenter,
           radius: 5000,
           type: ['restaurant']
         }, callback);
@@ -400,7 +400,7 @@ var mapScript = {
                 }
             });
         }else{
-            $("#msg").html(this.setMessage("Please select destination","danger"));
+            $("#msg").html(this.setMessage("Please select restaurant destination","danger"));
         }
     },
     setMessage: function(message,type){
